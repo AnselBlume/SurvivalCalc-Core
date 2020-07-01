@@ -1,6 +1,7 @@
 import { calculate, Generations, Pokemon, Move, Field } from '@smogon/calc';
 import { Requirement } from 'model/requirement';
 import { Attack } from 'model/attack';
+import { Stat } from 'model/stat';
 import { meetsReq } from 'meets-req';
 import { getKOChance } from 'ko-chance';
 import { AbilityName } from '@smogon/calc/dist/data/interface';
@@ -15,7 +16,7 @@ describe('meetsReq Unit Tests', () => {
             'Cinderace', {
                 level: 50,
                 evs: {
-                    atk: 252
+                    [Stat.ATK]: 252
                 }
             }
         );
@@ -28,8 +29,8 @@ describe('meetsReq Unit Tests', () => {
                 level: 50,
                 nature: 'Impish',
                 evs: {
-                    hp: 252,
-                    def: 188
+                    [Stat.HP]: 252,
+                    [Stat.DEF]: 188
                 }
             }
         );
@@ -113,7 +114,7 @@ describe('meetsReq Unit Tests', () => {
             'Kangaskhan-Mega', {
                 level: 50,
                 evs: {
-                    atk: 228
+                    [Stat.ATK]: 228
                 }
             }
         );
@@ -152,7 +153,7 @@ describe('meetsReq Unit Tests', () => {
             'Tapu Koko', {
                 level: 100,
                 evs: {
-                    spa: 252
+                    [Stat.SATK]: 252
                 },
                 item: 'Life Orb'
             }
@@ -168,7 +169,7 @@ describe('meetsReq Unit Tests', () => {
             'Salamence Mega', {
                 level: 100,
                 evs: {
-                    atk: 252
+                    [Stat.ATK]: 252
                 }
             }
         );
@@ -190,8 +191,8 @@ describe('meetsReq Unit Tests', () => {
                 level: 100,
                 nature: 'Bold',
                 evs: {
-                    hp: 252,
-                    def: 252
+                    [Stat.HP]: 252,
+                    [Stat.DEF]: 252
                 }
             }
         );
