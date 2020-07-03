@@ -1,12 +1,163 @@
 import { calculate, Generations, Pokemon, Move, Field } from '@smogon/calc';
-import { Requirement } from 'model/requirement';
+import { SurvivalRequirement, HPRequirement, Requirements } from 'model/requirements';
 import { Attack } from 'model/attack';
 import { Stat } from 'model/stat';
-import { meetsReq } from 'meets-req';
+import { meetsSurvivalReq, meetsHPReq, meetsReqs } from 'meets-req';
 import { getKOChance } from 'ko-chance';
 import { AbilityName } from '@smogon/calc/dist/data/interface';
 
-describe('meetsReq Unit Tests', () => {
+describe('meetsReqs Unit Tests', () => {
+    const field = new Field();
+
+    // Consecutive attacks Conkeldurr survives
+    const kangaskhan = new Pokemon(Generations.get(8), 'Kangaskhan-Mega', {
+        level: 50,
+        evs: {
+            [Stat.ATK]: 252
+        }
+    });
+    const ret = new Move(Generations.get(8), 'Return');
+
+    const cresselia = new Pokemon(Generations.get(8), 'Cresselia', { level: 50 });
+    const psyshock = new Move(Generations.get(8), 'Psyshock');
+
+    // The attack Conkeldurr doesn't survive
+    const latios = new Pokemon(Generations.get(8), 'Latios', {
+        level: 50,
+        item: 'Life Orb'
+    });
+    const psychic = new Move(Generations.get(8), 'Psychic');
+
+    // HPRequirement
+    const hpReq = new HPRequirement({ reduceLifeOrb: true });
+
+    test('Lvl 50 228/68/0 Conkeldurr survives Kangaskhan Return and Cresselia Psyshock, has Life Orb Number ', () => {
+        // 228 hpEVs is 209 HP, a Life Orb reduction number
+        const conkeldurr = new Pokemon(Generations.get(8), 'Conkeldurr', {
+            level: 50,
+            evs: {
+                [Stat.HP]: 228,
+                [Stat.DEF]: 68
+            }
+        });
+
+        const survivalReq = new SurvivalRequirement(.01, 100,
+            new Attack(kangaskhan, conkeldurr, ret, field),
+            new Attack(cresselia, conkeldurr, psyshock, field)
+        );
+
+        expect(meetsReqs(new Requirements(hpReq, survivalReq))).toBe(true);
+    });
+
+    test('Lvl 50 236/68/0 Conkeldurr survives Return and Psyshock but doesn\'t have a Life Orb number', () => {
+        // 228 hpEVs is 209 HP, a Life Orb reduction number
+        const conkeldurr = new Pokemon(Generations.get(8), 'Conkeldurr', {
+            level: 50,
+            evs: {
+                [Stat.HP]: 236,
+                [Stat.DEF]: 68
+            }
+        });
+
+        const survivalReq = new SurvivalRequirement(.01, 100,
+            new Attack(kangaskhan, conkeldurr, ret, field),
+            new Attack(cresselia, conkeldurr, psyshock, field)
+        );
+
+        expect(meetsReqs(new Requirements(hpReq, survivalReq))).toBe(false);
+    });
+
+    test('Lvl 50 228/68/0 Conkeldurr survives Return and Psyshock, has a Life Orb Number, but doesn\'t survive Latios\' Life Orb Psyshock', () => {
+        const conkeldurr = new Pokemon(Generations.get(8), 'Conkeldurr', {
+            level: 50,
+            evs: {
+                [Stat.HP]: 228,
+                [Stat.DEF]: 68
+            }
+        });
+
+        const survivalReq1 = new SurvivalRequirement(.01, 100, // Meets this
+            new Attack(kangaskhan, conkeldurr, ret, field),
+            new Attack(cresselia, conkeldurr, psyshock, field)
+        );
+
+        const survivalReq2 = new SurvivalRequirement(.01, 100, // Doesn't meet this
+            new Attack(latios, conkeldurr, psychic, field)
+        );
+
+        expect(meetsReqs(new Requirements(hpReq, survivalReq1, survivalReq2))).toBe(false);
+    });
+
+});
+
+describe('meetsHPReq Unit Tests', () => {
+    test('Reduce Weather Damage', () => {
+        const cresselia = new Pokemon(Generations.get(8), 'Cresselia', { level: 50 });
+        const hpReq = new HPRequirement({ reduceWeather: true });
+
+        expect(meetsHPReq(cresselia, hpReq)).toBe(false);
+
+        cresselia.evs.hp = 220;
+        expect(meetsHPReq(cresselia.clone(), hpReq)).toBe(true); // Need to clone to recalculate stats
+    });
+
+    test('Reduce Life Orb Recoil', () => {
+        const conkeldurr = new Pokemon(Generations.get(8), 'Conkeldurr', { level: 50 });
+        const hpReq = new HPRequirement({ reduceLifeOrb: true });
+
+        expect(meetsHPReq(conkeldurr, hpReq)).toBe(false);
+
+        conkeldurr.evs.hp = 228;
+        expect(meetsHPReq(conkeldurr.clone(), hpReq)).toBe(true);
+    });
+
+    test('Sitrus Berry after Super Fang', () => {
+        const cresselia = new Pokemon(Generations.get(8), 'Cresselia', { level: 50 });
+        const hpReq = new HPRequirement({ sitrusSuperFang: true });
+
+        expect(meetsHPReq(cresselia, hpReq)).toBe(false);
+
+        cresselia.evs.hp = 244;
+        expect(meetsHPReq(cresselia.clone(), hpReq)).toBe(true);
+    });
+
+    test('Four Substitutes', () => {
+        const suicune = new Pokemon(Generations.get(8), 'Suicune'); // Level 100
+        const hpReq = new HPRequirement({ fourSubs: true });
+
+        expect(meetsHPReq(suicune, hpReq)).toBe(true);
+
+        suicune.evs.hp = 252;
+        expect(meetsHPReq(suicune.clone(), hpReq)).toBe(false);
+    });
+
+    test('Five Substitutes with Leftovers', () => {
+        let suicune = new Pokemon(Generations.get(8), 'Suicune'); // Level 100
+        const hpReq = new HPRequirement({ fiveSubs: true });
+
+        const hpRemainders = new Set([1, 2, 3, 6, 7, 11]); // Remainders mod 16 necessary for 5 subs with leftovers
+
+        // Go through all remainders mod 16
+        for (let hpEVs = 172; hpEVs < 236; hpEVs += 4) { // HP stat with 172 hpEVs at level 100 is divisible by 16
+            suicune.evs.hp = hpEVs;
+            suicune = suicune.clone();
+            expect(meetsHPReq(suicune, hpReq)).toBe(hpRemainders.has(suicune.maxHP() % 16));
+        }
+    });
+
+        test('Empty HPReq', () => {
+        const suicune = new Pokemon(Generations.get(8), 'Suicune'); // Level 100
+        const hpReq = new HPRequirement();
+
+        // Go through all remainders mod 16
+        for (let hpEVs = 172; hpEVs < 236; hpEVs += 4) { // HP stat with 172 hpEVs at level 100 is divisible by 16
+            suicune.evs.hp = hpEVs;
+            expect(meetsHPReq(suicune.clone(), hpReq)).toBe(true);
+        }
+    });
+});
+
+describe('meetsSurvivalReq Unit Tests', () => {
     const field: Field = new Field();
 
     // Test percent remaining
@@ -36,13 +187,13 @@ describe('meetsReq Unit Tests', () => {
         );
 
         const attack: Attack = new Attack(cinderace, ferrothorn, firePunch, field);
-        let requirement: Requirement = new Requirement(.01, 100, attack);
-        let result: boolean = meetsReq(requirement);
+        let requirement = new SurvivalRequirement(.01, 100, attack);
+        let result: boolean = meetsSurvivalReq(requirement);
 
         expect(result).toBe(true);
 
-        requirement = new Requirement(6, 100, attack);
-        result = meetsReq(requirement);
+        requirement = new SurvivalRequirement(6, 100, attack);
+        result = meetsSurvivalReq(requirement);
 
         expect(result).toBe(false);
     });
@@ -66,13 +217,13 @@ describe('meetsReq Unit Tests', () => {
         );
 
         const attack: Attack = new Attack(cresselia, conkeldurr, psyshock, field);
-        let requirement: Requirement = new Requirement(50, 75, attack);
-        let result: boolean = meetsReq(requirement);
+        let requirement = new SurvivalRequirement(50, 75, attack);
+        let result: boolean = meetsSurvivalReq(requirement);
 
         expect(result).toBe(true);
 
-        requirement = new Requirement(50, 81.25, attack);
-        result = meetsReq(requirement);
+        requirement = new SurvivalRequirement(50, 81.25, attack);
+        result = meetsSurvivalReq(requirement);
 
         expect(result).toBe(false);
     });
@@ -96,13 +247,13 @@ describe('meetsReq Unit Tests', () => {
         );
 
         const attack: Attack = new Attack(kangaskhan, shuckle, seismicToss, field);
-        const requirement = new Requirement(.01, 100, attack);
-        let result: boolean = meetsReq(requirement);
+        const requirement = new SurvivalRequirement(.01, 100, attack);
+        let result: boolean = meetsSurvivalReq(requirement);
 
         expect(result).toBe(false);
 
         kangaskhan.ability = 'notAnAbility' as AbilityName; // If this is falsy (e.g. '') it gets replaced by the default ability in the constructor
-        result = meetsReq(requirement);
+        result = meetsSurvivalReq(requirement);
 
         expect(result).toBe(true);
     });
@@ -135,13 +286,13 @@ describe('meetsReq Unit Tests', () => {
 
         // Set pctTime to the maximum possible
         const attack: Attack = new Attack(kangaskhan, gastrodon, doubleEdge, field);
-        const requirement = new Requirement(.01, (1 - koChance) * 100, attack); //
-        let result: boolean = meetsReq(requirement);
+        const requirement = new SurvivalRequirement(.01, (1 - koChance) * 100, attack); //
+        let result: boolean = meetsSurvivalReq(requirement);
 
         expect(result).toBe(true);
 
         requirement.percentTime += .01; // Increase percentTime in order to fail the requirement
-        result = meetsReq(requirement);
+        result = meetsSurvivalReq(requirement);
         expect(result).toBe(false);
     });
 
@@ -203,13 +354,13 @@ describe('meetsReq Unit Tests', () => {
             new Attack(ferrothorn, cresselia, ironHead, field)
         ];
 
-        const requirement = new Requirement(.01, 52.246, ...attacks); // Max percentTime with .01% HP remaining
-        let result = meetsReq(requirement);
+        const requirement = new SurvivalRequirement(.01, 52.246, ...attacks); // Max percentTime with .01% HP remaining
+        let result = meetsSurvivalReq(requirement);
 
         expect(result).toBe(true);
 
         requirement.percentTime += .01; // Should no longer meet requirement
-        result = meetsReq(requirement);
+        result = meetsSurvivalReq(requirement);
 
         expect(result).toBe(false);
     });
