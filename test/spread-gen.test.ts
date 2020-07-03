@@ -115,6 +115,48 @@ describe('getAllSpreads Unit Tests', () => {
         expect(reduceAnd(sDefVals.values())).toBe(true);
     });
 
+        test('Lvl 50 Raikou with Even IVs', () => {
+        const raikou = new Pokemon(Generations.get(8), 'Raikou', {
+            level: 50,
+            ivs: {
+                [Stat.HP]: 2,
+                [Stat.DEF]: 30,
+                [Stat.SDEF]: 16
+            }
+        });
+        const spreadGen = new SpreadGenerator(raikou);
+        const spreads = spreadGen.getAllSpreads();
+
+        // Count the number of times it generates a spread
+        let count = 0;
+
+        // Keep track of the EVs encountered
+        const hpVals = new Map();
+        const defVals = new Map();
+        const sDefVals = new Map();
+
+        for (let i = 0; i <= 248; i += 8) { // Mark all EVs as unseen
+            hpVals.set(i, false);
+            defVals.set(i, false);
+            sDefVals.set(i, false);
+        }
+
+        for (const spread of spreads) {
+            hpVals.set(spread[Stat.HP], true);
+            defVals.set(spread[Stat.DEF], true);
+            sDefVals.set(spread[Stat.SDEF], true);
+
+            count++;
+        }
+
+        expect(count).toBe(27808); // Verify number of spreads generated
+
+        // Verify all values in {0, 8, 16, 24, ... , 248} were generated for hp, def, sDef
+        expect(reduceAnd(hpVals.values())).toBe(true);
+        expect(reduceAnd(defVals.values())).toBe(true);
+        expect(reduceAnd(sDefVals.values())).toBe(true);
+    });
+
     test('Lvl 9 Piplup', () => {
         const piplup = new Pokemon(Generations.get(8), 'Piplup', { level: 9 });
         const spreadGen = new SpreadGenerator(piplup);

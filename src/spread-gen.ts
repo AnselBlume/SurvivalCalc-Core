@@ -75,6 +75,8 @@ export class SpreadGenerator {
 
     /**
      * Generates all possible spreads with HP and the selected defensive side.
+     *
+     * @param side The defensive side, along with HP, EVs will be generated for
      */
     *getOneSidedSpreads(side: Stat.DEF | Stat.SDEF): Generator<Spread, void, void> {
         for (let hpEVs = 0; hpEVs <= 252;) {
@@ -112,7 +114,11 @@ export class SpreadGenerator {
     // Generate spreads without extraneous EVs
     private getNextIncrement(spread: Spread, stat: Stat): number {
         if (this.defender.level === 50) { // Hard-code common cases
-            return spread[stat] === 0 ? 4 : 8;
+            if (spread[stat] === 0) {
+                return this.defender.ivs[stat] % 2 === 0 ? 8 : 4;
+            } else {
+                return 8;
+            }
         } else if (this.defender.level === 100) {
             return 4;
         } else { // TODO: Consider implementing closed-form/lower bound
