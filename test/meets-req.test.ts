@@ -1,10 +1,9 @@
 import { calculate, Generations, Pokemon, Move, Field } from '@smogon/calc';
+import { AbilityName } from '@smogon/calc/dist/data/interface';
+import { Attack, Stat } from 'model';
 import { SurvivalRequirement, HPRequirement, Requirements } from 'model/requirements';
-import { Attack } from 'model/attack';
-import { Stat } from 'model/stat';
 import { meetsSurvivalReq, meetsHPReq, meetsReqs } from 'meets-req';
 import { getKOChance } from 'ko-chance';
-import { AbilityName } from '@smogon/calc/dist/data/interface';
 
 describe('meetsReqs Unit Tests', () => {
     const field = new Field();

@@ -1,7 +1,6 @@
 import { Pokemon, Generations } from '@smogon/calc/';
 import { Stats } from '@smogon/calc/dist/stats';
-import { Spread } from 'model/spread';
-import { Stat } from 'model/stat';
+import { Spread, Stat } from 'model';
 
 export class SpreadGenerator {
     defender: Pokemon;

@@ -1,5 +1,4 @@
-import { Spread } from 'model/spread';
-import { Stat } from 'model/stat';
+import { Spread, Stat } from 'model';
 import { SpreadGenerator } from 'spread-gen';
 import { Pokemon, Generations } from '@smogon/calc';
 
