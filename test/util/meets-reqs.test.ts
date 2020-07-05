@@ -6,8 +6,6 @@ import { meetsSurvivalReq, meetsHPReq, meetsReqs } from 'util/meets-reqs';
 import { getKOChance } from 'util/ko-chance';
 
 describe('meetsReqs Unit Tests', () => {
-    const field = new Field();
-
     // Consecutive attacks Conkeldurr survives
     const kangaskhan = new Pokemon(Generations.get(8), 'Kangaskhan-Mega', {
         level: 50,
@@ -41,8 +39,8 @@ describe('meetsReqs Unit Tests', () => {
         });
 
         const survivalReq = new SurvivalRequirement(.01, 100,
-            new Attack(kangaskhan, conkeldurr, ret, field),
-            new Attack(cresselia, conkeldurr, psyshock, field)
+            new Attack(kangaskhan, conkeldurr, ret),
+            new Attack(cresselia, conkeldurr, psyshock)
         );
 
         expect(meetsReqs(new Requirements(hpReq, survivalReq))).toBe(true);
@@ -59,8 +57,8 @@ describe('meetsReqs Unit Tests', () => {
         });
 
         const survivalReq = new SurvivalRequirement(.01, 100,
-            new Attack(kangaskhan, conkeldurr, ret, field),
-            new Attack(cresselia, conkeldurr, psyshock, field)
+            new Attack(kangaskhan, conkeldurr, ret),
+            new Attack(cresselia, conkeldurr, psyshock)
         );
 
         expect(meetsReqs(new Requirements(hpReq, survivalReq))).toBe(false);
@@ -76,12 +74,12 @@ describe('meetsReqs Unit Tests', () => {
         });
 
         const survivalReq1 = new SurvivalRequirement(.01, 100, // Meets this
-            new Attack(kangaskhan, conkeldurr, ret, field),
-            new Attack(cresselia, conkeldurr, psyshock, field)
+            new Attack(kangaskhan, conkeldurr, ret),
+            new Attack(cresselia, conkeldurr, psyshock)
         );
 
         const survivalReq2 = new SurvivalRequirement(.01, 100, // Doesn't meet this
-            new Attack(latios, conkeldurr, psychic, field)
+            new Attack(latios, conkeldurr, psychic)
         );
 
         expect(meetsReqs(new Requirements(hpReq, survivalReq1, survivalReq2))).toBe(false);
@@ -157,8 +155,6 @@ describe('meetsHPReq Unit Tests', () => {
 });
 
 describe('meetsSurvivalReq Unit Tests', () => {
-    const field: Field = new Field();
-
     // Test percent remaining
     test('percentRemaining: Cinderace Fire Punch vs. 252/188 Impish Ferrothorn meets (.01, 100) and fails (6, 100)', () => {
         const cinderace: Pokemon = new Pokemon(
@@ -185,7 +181,7 @@ describe('meetsSurvivalReq Unit Tests', () => {
             }
         );
 
-        const attack: Attack = new Attack(cinderace, ferrothorn, firePunch, field);
+        const attack: Attack = new Attack(cinderace, ferrothorn, firePunch);
         let requirement = new SurvivalRequirement(.01, 100, attack);
         let result: boolean = meetsSurvivalReq(requirement);
 
@@ -215,7 +211,7 @@ describe('meetsSurvivalReq Unit Tests', () => {
             }
         );
 
-        const attack: Attack = new Attack(cresselia, conkeldurr, psyshock, field);
+        const attack: Attack = new Attack(cresselia, conkeldurr, psyshock);
         let requirement = new SurvivalRequirement(50, 75, attack);
         let result: boolean = meetsSurvivalReq(requirement);
 
@@ -245,7 +241,7 @@ describe('meetsSurvivalReq Unit Tests', () => {
             }
         );
 
-        const attack: Attack = new Attack(kangaskhan, shuckle, seismicToss, field);
+        const attack: Attack = new Attack(kangaskhan, shuckle, seismicToss);
         const requirement = new SurvivalRequirement(.01, 100, attack);
         let result: boolean = meetsSurvivalReq(requirement);
 
@@ -280,11 +276,11 @@ describe('meetsSurvivalReq Unit Tests', () => {
 
         // Compute KO chance dynamically in case Parental Bond computation changes in the calculator
         const damageRolls: [number[], number[]] =
-            calculate(Generations.get(8), kangaskhan, gastrodon, doubleEdge, field).damage as [number[], number[]];
+            calculate(Generations.get(8), kangaskhan, gastrodon, doubleEdge).damage as [number[], number[]];
         const koChance: number = getKOChance(186, ...damageRolls);
 
         // Set pctTime to the maximum possible
-        const attack: Attack = new Attack(kangaskhan, gastrodon, doubleEdge, field);
+        const attack: Attack = new Attack(kangaskhan, gastrodon, doubleEdge);
         const requirement = new SurvivalRequirement(.01, (1 - koChance) * 100, attack); //
         let result: boolean = meetsSurvivalReq(requirement);
 
@@ -349,8 +345,8 @@ describe('meetsSurvivalReq Unit Tests', () => {
 
         const attacks: Attack[] = [
             new Attack(tapuKoko, cresselia, thunderbolt, electricTerrain),
-            new Attack(salamence, cresselia, doubleEdge, field),
-            new Attack(ferrothorn, cresselia, ironHead, field)
+            new Attack(salamence, cresselia, doubleEdge),
+            new Attack(ferrothorn, cresselia, ironHead)
         ];
 
         const requirement = new SurvivalRequirement(.01, 52.246, ...attacks); // Max percentTime with .01% HP remaining
@@ -364,3 +360,4 @@ describe('meetsSurvivalReq Unit Tests', () => {
         expect(result).toBe(false);
     });
 });
+

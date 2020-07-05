@@ -9,7 +9,7 @@ export class Attack {
 	move: Move;
 	field: Field;
 
-	constructor(attacker: Pokemon, defender: Pokemon, move: Move, field: Field) {
+	constructor(attacker: Pokemon, defender: Pokemon, move: Move, field?: Field) {
 		this.attacker = attacker;
 		this.defender = defender;
 		this.move = move;
