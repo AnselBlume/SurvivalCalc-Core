@@ -1,5 +1,4 @@
-import { Pokemon, Generations } from '@smogon/calc/';
-import { Stats } from '@smogon/calc/dist/stats';
+import { Pokemon, Generations, calcStat } from '@smogon/calc/';
 import { Spread, Stat } from 'model';
 
 export class SpreadGenerator {
@@ -133,7 +132,7 @@ export class SpreadGenerator {
     }
 
     private calcStat(evs: number, stat: Stat) {
-        return Stats.calcStat(Generations.get(8), stat, this.defender.species.baseStats[stat],
-                              this.defender.ivs[stat], evs, this.defender.level, this.defender.nature);
+        return calcStat(Generations.get(8), stat, this.defender.species.baseStats[stat],
+                        this.defender.ivs[stat], evs, this.defender.level, this.defender.nature);
     }
 }
