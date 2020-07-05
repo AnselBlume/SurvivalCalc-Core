@@ -1,4 +1,4 @@
-import { getKOChance } from 'ko-chance'; // Needs modulePaths: ['src'] to compile without explicit file path
+import { getKOChance } from 'util/ko-chance'; // Needs modulePaths: ['src'] to compile without explicit file path
 
 describe('getKOChance Unit Tests', () => {
     const precision = 10;

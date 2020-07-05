@@ -1,6 +1,6 @@
-import * as lossFuncs from 'loss-func';
+import * as lossFuncs from 'util/loss-func';
 import { Spread, Stat, Attack } from 'model';
-import { SpreadComparator } from 'spread-compare';
+import { SpreadComparator } from 'util/spread-compare';
 import { Pokemon, Generations, Move, Field } from '@smogon/calc';
 
 /**

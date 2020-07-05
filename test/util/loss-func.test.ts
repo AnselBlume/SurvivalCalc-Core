@@ -1,4 +1,4 @@
-import * as lossFuncs from 'loss-func';
+import * as lossFuncs from 'util/loss-func';
 import { Spread } from 'model';
 
 describe('Loss Function Unit Tests', () => {

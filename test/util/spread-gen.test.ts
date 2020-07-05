@@ -1,5 +1,5 @@
 import { Spread, Stat } from 'model';
-import { SpreadGenerator } from 'spread-gen';
+import { SpreadGenerator } from 'util/spread-gen';
 import { Pokemon, Generations } from '@smogon/calc';
 
 // Reduces the iterable with the && operation

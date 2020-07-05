@@ -1,9 +1,9 @@
-import { LossFunction } from 'loss-func';
+import { LossFunction } from 'util/loss-func';
 import { Spread } from 'model/spread';
 import { Attack } from 'model/attack';
 import { Stat } from 'model/stat';
-import { getDamageRolls } from 'damage';
-import { getKOChance } from 'ko-chance';
+import { getDamageRolls } from 'util/damage';
+import { getKOChance } from 'util/ko-chance';
 
 export class SpreadComparator {
     bestSpread: Spread;
