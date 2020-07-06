@@ -52,7 +52,7 @@ export class SpreadComparator {
         if (this.lossFunc) { // Loss function mode
             const loss = this.lossFunc.loss(spread);
             
-            if (!this.bestLoss || loss < this.bestLoss) {
+            if (!this.bestSpread || loss < this.bestLoss) {
                 this.bestSpread = spread;
                 this.bestLoss = loss;
             }
