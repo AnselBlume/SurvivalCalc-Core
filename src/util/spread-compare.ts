@@ -1,7 +1,7 @@
-import { LossFunction } from 'util/loss-func';
 import { Spread } from 'model/spread';
 import { Attack } from 'model/attack';
-import { Stat } from 'model/stat';
+import { LossFunction } from 'util/loss-func';
+import { applySpread } from 'util/apply-spread';
 import { getDamageRolls } from 'util/damage';
 import { getKOChance } from 'util/ko-chance';
 
@@ -57,7 +57,7 @@ export class SpreadComparator {
                 this.bestLoss = loss;
             }
         } else { // Compare spreads by damage
-            this.applySpread(spread, this.attacks);
+            applySpread(spread, this.attacks);
             const damageRolls: number[][] = getDamageRolls(...this.attacks);
             const maxDamage = damageRolls.reduce((x, y) => x + y[y.length - 1], 0);
 
@@ -121,25 +121,5 @@ export class SpreadComparator {
 
     private getDamagePercent(maxDamage: number): number {
         return maxDamage / this.attacks[0].defender.maxHP() * 100;
-    }
-
-    /**
-     * Applies the specified EV spread to the defending Pokemon in each of the Attack objects.
-     * 
-     * @param spread The spread to be applied.
-     * @param attacks The Attack array whose defenders will be cloned with the hp, def, and sDef EVs
-     * replaced.
-     */
-    private applySpread(spread: Spread, attacks: Attack[]) {
-        for (let i = 0; i < attacks.length; i++) {
-            const defender = attacks[i].defender;
-
-            defender.evs[Stat.HP] = spread[Stat.HP];
-            defender.evs[Stat.DEF] = spread[Stat.DEF];
-            defender.evs[Stat.SDEF] = spread[Stat.SDEF];
-
-            // The Pokemon's constructor needs to be called in order to recompute stats from EVs
-            attacks[i].defender = defender.clone();
-        }
     }
 }
