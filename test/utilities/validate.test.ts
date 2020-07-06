@@ -1,4 +1,4 @@
-import { validateInput } from 'util/';
+import { validateInput } from 'utilities';
 import { Generations, Pokemon, Move } from '@smogon/calc';
 import { Requirements, HPRequirement, SurvivalRequirement } from 'model/requirements';
 import { Attack } from 'model';

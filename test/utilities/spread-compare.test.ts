@@ -1,6 +1,6 @@
-import * as lossFuncs from 'util/loss-func';
+import * as lossFuncs from 'utilities/loss-func';
 import { Spread, Stat, Attack } from 'model';
-import { SpreadComparator } from 'util/spread-compare';
+import { SpreadComparator } from 'utilities/spread-compare';
 import { Pokemon, Generations, Move, Field } from '@smogon/calc';
 
 /**
@@ -178,19 +178,18 @@ describe('SpreadComparator with Attack Series Unit Tests', () => {
         expect(Math.floor(comparator.bestDmgPercent)).toBe(63);
     });
 
-    test('Equivalent spreads does not replace bestSpread', () => {
+    test('Equivalent spreads does not change bestSpread', () => {
         const comparator = new SpreadComparator(attacks);
         const spread1 = new Spread();
         const spread2 = new Spread(); // Equivalent spread, different object
 
         // Ingest first spread
         comparator.ingestSpread(spread1);
-        expect(comparator.bestSpread).toBe(spread1);
+        expectBestSpreadToBe(comparator, 0, 0, 0);
 
         // Ingest equivalent spread
         comparator.ingestSpread(spread2);
-        expect(comparator.bestSpread === spread1).toBe(true);
-        expect(comparator.bestSpread === spread2).toBe(false);
+        expectBestSpreadToBe(comparator, 0, 0, 0);
     });
 
     test('applySpread over multiple Attacks', () => {

@@ -1,9 +1,8 @@
-import { Spread } from 'model/spread';
-import { Attack } from 'model/attack';
-import { LossFunction } from 'util/loss-func';
-import { applySpread } from 'util/apply-spread';
-import { getDamageRolls } from 'util/damage';
-import { getKOChance } from 'util/ko-chance';
+import { Spread, Attack, Stat } from 'model';
+import { LossFunction } from 'utilities/loss-func';
+import { applySpread } from 'utilities/apply-spread';
+import { getDamageRolls } from 'utilities/damage';
+import { getKOChance } from 'utilities/ko-chance';
 
 export class SpreadComparator {
     bestSpread: Spread;
@@ -51,9 +50,9 @@ export class SpreadComparator {
     ingestSpread(spread: Spread): void {
         if (this.lossFunc) { // Loss function mode
             const loss = this.lossFunc.loss(spread);
-            
+
             if (!this.bestSpread || loss < this.bestLoss) {
-                this.bestSpread = spread;
+                this.bestSpread = new Spread(spread[Stat.HP], spread[Stat.DEF], spread[Stat.SDEF]);
                 this.bestLoss = loss;
             }
         } else { // Compare spreads by damage
@@ -107,7 +106,7 @@ export class SpreadComparator {
 
             // Save the spread and its associated calculations if it is better or it is the first
             if (!this.bestSpread || isBetterSpread) {
-                this.bestSpread = spread;
+                this.bestSpread = new Spread(spread[Stat.HP], spread[Stat.DEF], spread[Stat.SDEF]);
                 this.bestHitsToKO = hitsToKO;
                 this.bestXHKOChance = xhkoChance;
                 this.bestDmgPercent = dmgPercent;

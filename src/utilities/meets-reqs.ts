@@ -1,6 +1,6 @@
 import { Pokemon } from '@smogon/calc';
-import { getDamageRolls } from 'util/damage';
-import { getKOChance } from 'util/ko-chance';
+import { getDamageRolls } from 'utilities/damage';
+import { getKOChance } from 'utilities/ko-chance';
 import { SurvivalRequirement, HPRequirement, Requirements } from 'model/requirements';
 
 /**

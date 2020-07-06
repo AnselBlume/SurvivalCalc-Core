@@ -77,11 +77,13 @@ export class SpreadGenerator {
      * @param side The defensive side, along with HP, EVs will be generated for
      */
     *getOneSidedSpreads(side: Stat.DEF | Stat.SDEF): Generator<Spread, void, void> {
-        for (let hpEVs = 0; hpEVs <= 252;) {
-            const spread = new Spread(hpEVs);
+        let spread = new Spread();
 
+        for (let hpEVs = 0; hpEVs <= 252;) {
             for (let sideEVs = 0; sideEVs <= 252;) {
+                spread = new Spread(hpEVs);
                 spread[side] = sideEVs;
+
                 yield spread;
 
                 sideEVs += this.getNextIncrement(spread, side);

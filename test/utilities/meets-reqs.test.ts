@@ -2,8 +2,8 @@ import { calculate, Generations, Pokemon, Move, Field } from '@smogon/calc';
 import { AbilityName } from '@smogon/calc/dist/data/interface';
 import { Attack, Stat } from 'model';
 import { SurvivalRequirement, HPRequirement, Requirements } from 'model/requirements';
-import { meetsSurvivalReq, meetsHPReq, meetsReqs } from 'util/meets-reqs';
-import { getKOChance } from 'util/ko-chance';
+import { meetsSurvivalReq, meetsHPReq, meetsReqs } from 'utilities/meets-reqs';
+import { getKOChance } from 'utilities/ko-chance';
 
 describe('meetsReqs Unit Tests', () => {
     // Consecutive attacks Conkeldurr survives
