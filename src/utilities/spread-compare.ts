@@ -43,17 +43,22 @@ export class SpreadComparator {
     }
 
     /**
-     * Ingests the spread and compares it to those encountered previously.
+     * Ingests the spread and compares it to those encountered previously. Returns whether the
+     * ingested Spread was better and saved.
      * 
      * @param spread The new spread to compare. 
      */
-    ingestSpread(spread: Spread): void {
+    ingestSpread(spread: Spread): boolean {
         if (this.lossFunc) { // Loss function mode
             const loss = this.lossFunc.loss(spread);
 
             if (!this.bestSpread || loss < this.bestLoss) {
                 this.bestSpread = new Spread(spread[Stat.HP], spread[Stat.DEF], spread[Stat.SDEF]);
                 this.bestLoss = loss;
+
+                return true;
+            } else {
+                return false;
             }
         } else { // Compare spreads by damage
             applySpread(spread, this.attacks);
@@ -68,7 +73,7 @@ export class SpreadComparator {
 
             if (this.bestHitsToKO) {
                 if (hitsToKO < this.bestHitsToKO) { // New spread takes fewer hits before getting KO'd
-                    return;
+                    return false;
                 } else if (hitsToKO > this.bestHitsToKO) {
                     isBetterSpread = true;
                 }
@@ -83,9 +88,9 @@ export class SpreadComparator {
 
             const xhkoChance = getKOChance(this.attacks[0].defender.maxHP(), ...xhkoRolls);
 
-            if (this.bestXHKOChance) {
+            if (!isBetterSpread && this.bestXHKOChance) {
                 if (xhkoChance > this.bestXHKOChance) {
-                    return;
+                    return false;
                 } else if (xhkoChance < this.bestXHKOChance) {
                     isBetterSpread = true;
                 }
@@ -96,9 +101,9 @@ export class SpreadComparator {
             // Note that if s.dmgPercent < s'.dmgPercent, then X hits of maxDamage still has s.dmgPercent < s'.dmgPercent
             const dmgPercent = this.getDamagePercent(maxDamage);
 
-            if (this.bestDmgPercent) {
+            if (!isBetterSpread && this.bestDmgPercent) {
                 if (dmgPercent > this.bestDmgPercent) {
-                    return;
+                    return false;
                 } else if (dmgPercent < this.bestDmgPercent) {
                     isBetterSpread = true;
                 }
@@ -110,6 +115,10 @@ export class SpreadComparator {
                 this.bestHitsToKO = hitsToKO;
                 this.bestXHKOChance = xhkoChance;
                 this.bestDmgPercent = dmgPercent;
+
+                return true;
+            } else {
+                return false;
             }
         }
     }

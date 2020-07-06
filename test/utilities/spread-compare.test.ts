@@ -53,6 +53,14 @@ describe('SpreadComparator with Loss Function Unit Tests', () => {
 
         expectBestSpreadToBe(comparator, 36, 0, 0);
     });
+
+    test('ingestSpread return values', () => {
+        const comparator = new SpreadComparator(new lossFuncs.MinimizeHP());
+
+        expect(comparator.ingestSpread(new Spread(100, 0, 0))).toBe(true);
+        expect(comparator.ingestSpread(new Spread(252, 0, 0))).toBe(false);
+        expect(comparator.ingestSpread(new Spread(0, 0, 0))).toBe(true);
+    });
 });
 
 describe('SpreadComparator with Attack Series Unit Tests', () => {
@@ -207,5 +215,13 @@ describe('SpreadComparator with Attack Series Unit Tests', () => {
             expect(attack.defender.evs[Stat.DEF]).toBe(2);
             expect(attack.defender.evs[Stat.SDEF]).toBe(3);
         }
+    });
+
+    test('ingestSpread return values', () => {
+        const comparator = new SpreadComparator(attacks);
+
+        expect(comparator.ingestSpread(new Spread(100, 100, 0))).toBe(true);
+        expect(comparator.ingestSpread(new Spread(0, 0, 0))).toBe(false);
+        expect(comparator.ingestSpread(new Spread(252, 252, 0))).toBe(true);
     });
 });
