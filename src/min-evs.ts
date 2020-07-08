@@ -10,7 +10,7 @@ export function getMinEVs(requirements: Requirements): Spread {
     // Extract defending Pokemon from first requirement's first attack for SpreadGenerator
     const defender: Pokemon = requirements.survivalReqs[0].attacks[0].defender;
 
-    let lossFunc: MinEVsLoss;
+    let hpLossFunc: MaxHPLoss | MinHPLoss;
 
     // Get spreads to consider
     const spreadGen: SpreadGenerator = new SpreadGenerator(defender);
@@ -21,23 +21,30 @@ export function getMinEVs(requirements: Requirements): Spread {
     if (hasSameDefensiveCategory(requirements.survivalReqs)) {
         const stat: Stat.DEF | Stat.SDEF = getSameDefensiveStat(requirements.survivalReqs);
         spreads = spreadGen.getOneSidedSpreads(stat);
-        lossFunc = new MinEVsLoss(new MaxHPLoss()); // Maximize HP for overall bulk
+        hpLossFunc = new MaxHPLoss(); // Maximize HP for overall bulk
     } else {
         spreads = spreadGen.getAllSpreads();
-        lossFunc = new MinEVsLoss(new MinHPLoss()); // Minimize HP for draining moves
+        hpLossFunc = new MinHPLoss(); // Minimize HP for draining moves
     }
+    const minEVsLossFunc: MinEVsLoss = new MinEVsLoss(hpLossFunc);
 
     // Find best EV spread
-    const comparator: SpreadComparator = new SpreadComparator(lossFunc);
-    let bestEVTotal = 510;
+    const comparator: SpreadComparator = new SpreadComparator(minEVsLossFunc);
+    let bestEVTotal = Infinity;
+    const minimizingHP = hpLossFunc instanceof MinHPLoss; // Are we minimizing HP
 
     for (const spread of spreads) {
         // We could simply check whether each spread meets the requirements then let the SpreadComparator 
         // use the MinimizeEVs loss function to find the best spread. However, calling meetsReqs on every
-        // spread is expensive. Check whether the spread has fewer EVs than the best first
+        // spread is expensive. Check whether the spread has fewer EVs than the best first and if the HP
+        // is either higher or lower than the best, depending on whether we're maximizing or minimizing it
         const evTotal = spread[Stat.HP] + spread[Stat.DEF] + spread[Stat.SDEF];
+        const hasBadHP = comparator.bestSpread
+                         && (minimizingHP && spread[Stat.HP] > comparator.bestSpread[Stat.HP]
+                             || !minimizingHP && spread[Stat.HP] < comparator.bestSpread[Stat.HP]);
 
-        if (evTotal > bestEVTotal) { // This spread is not minimal
+        if (evTotal > bestEVTotal || evTotal === bestEVTotal && hasBadHP)
+        {
             continue;
         }
         
