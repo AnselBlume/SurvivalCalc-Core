@@ -1,7 +1,7 @@
 import { Requirements, Spread, SurvivalRequirement, Stat } from 'model';
 import { Pokemon } from '@smogon/calc';
 import { MoveCategory } from '@smogon/calc/dist/data/interface';
-import { MinimizeEVs, MinimizeHP, MaximizeHP } from 'utilities/loss-func';
+import { MinEVsLoss, MinHPLoss, MaxHPLoss } from 'utilities/loss-func';
 import { validateInput, SpreadGenerator, SpreadComparator, meetsReqs, applySpread } from 'utilities';
 
 export function getMinEVs(requirements: Requirements): Spread {
@@ -10,7 +10,7 @@ export function getMinEVs(requirements: Requirements): Spread {
     // Extract defending Pokemon from first requirement's first attack for SpreadGenerator
     const defender: Pokemon = requirements.survivalReqs[0].attacks[0].defender;
 
-    let lossFunc: MinimizeEVs;
+    let lossFunc: MinEVsLoss;
 
     // Get spreads to consider
     const spreadGen: SpreadGenerator = new SpreadGenerator(defender);
@@ -21,10 +21,10 @@ export function getMinEVs(requirements: Requirements): Spread {
     if (hasSameDefensiveCategory(requirements.survivalReqs)) {
         const stat: Stat.DEF | Stat.SDEF = getSameDefensiveStat(requirements.survivalReqs);
         spreads = spreadGen.getOneSidedSpreads(stat);
-        lossFunc = new MinimizeEVs(new MaximizeHP()); // Maximize HP for overall bulk
+        lossFunc = new MinEVsLoss(new MaxHPLoss()); // Maximize HP for overall bulk
     } else {
         spreads = spreadGen.getAllSpreads();
-        lossFunc = new MinimizeEVs(new MinimizeHP()); // Minimize HP for draining moves
+        lossFunc = new MinEVsLoss(new MinHPLoss()); // Minimize HP for draining moves
     }
 
     // Find best EV spread

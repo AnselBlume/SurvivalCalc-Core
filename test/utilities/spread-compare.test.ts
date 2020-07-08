@@ -27,14 +27,14 @@ describe('SpreadComparator with Loss Function Unit Tests', () => {
     ];
 
     test('Minimize HP', () => {
-        const comparator = new SpreadComparator(new lossFuncs.MinimizeHP());
+        const comparator = new SpreadComparator(new lossFuncs.MinHPLoss());
         spreads.forEach(spread => comparator.ingestSpread(spread));
 
         expectBestSpreadToBe(comparator, 12, 4, 20);
     });
 
     test('Maximize HP', () => {
-        const comparator = new SpreadComparator(new lossFuncs.MaximizeHP());
+        const comparator = new SpreadComparator(new lossFuncs.MaxHPLoss());
         spreads.forEach(spread => comparator.ingestSpread(spread));
 
         expectBestSpreadToBe(comparator, 252, 4, 252);
@@ -42,20 +42,20 @@ describe('SpreadComparator with Loss Function Unit Tests', () => {
 
     test('MinimizeEVs', () => {
         // While minimizing HP
-        let comparator = new SpreadComparator(new lossFuncs.MinimizeEVs(new lossFuncs.MinimizeHP()));
+        let comparator = new SpreadComparator(new lossFuncs.MinEVsLoss(new lossFuncs.MinHPLoss()));
         spreads.forEach(spread => comparator.ingestSpread(spread));
 
         expectBestSpreadToBe(comparator, 12, 4, 20);
 
         // While maximizing HP
-        comparator = new SpreadComparator(new lossFuncs.MinimizeEVs(new lossFuncs.MaximizeHP()));
+        comparator = new SpreadComparator(new lossFuncs.MinEVsLoss(new lossFuncs.MaxHPLoss()));
         spreads.forEach(spread => comparator.ingestSpread(spread));
 
         expectBestSpreadToBe(comparator, 36, 0, 0);
     });
 
     test('ingestSpread return values', () => {
-        const comparator = new SpreadComparator(new lossFuncs.MinimizeHP());
+        const comparator = new SpreadComparator(new lossFuncs.MinHPLoss());
 
         expect(comparator.ingestSpread(new Spread(100, 0, 0))).toBe(true);
         expect(comparator.ingestSpread(new Spread(252, 0, 0))).toBe(false);

@@ -8,22 +8,22 @@ export interface LossFunction {
     loss(spread: Spread): number;
 }
 
-export class MinimizeHP implements LossFunction {
+export class MinHPLoss implements LossFunction {
     loss(spread: Spread): number {
         return spread[Stat.HP];
     }
 }
 
-export class MaximizeHP implements LossFunction {
+export class MaxHPLoss implements LossFunction {
     loss(spread: Spread): number {
         return -spread[Stat.HP];
     }
 }
 
-export class MinimizeEVs implements LossFunction {
-    mode: MinimizeHP | MaximizeHP;
+export class MinEVsLoss implements LossFunction {
+    mode: MinHPLoss | MaxHPLoss;
 
-    constructor(mode: MinimizeHP | MaximizeHP) {
+    constructor(mode: MinHPLoss | MaxHPLoss) {
         this.mode = mode;
     }
 

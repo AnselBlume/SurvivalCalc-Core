@@ -7,7 +7,7 @@ describe('Loss Function Unit Tests', () => {
     const spread3 = new Spread(252, 4, 252);
 
     test('Minimize HP', () => {
-        const minHP = new lossFuncs.MinimizeHP();
+        const minHP = new lossFuncs.MinHPLoss();
 
         expect(minHP.loss(spread1)).toBe(20);
         expect(minHP.loss(spread2)).toBe(52);
@@ -15,7 +15,7 @@ describe('Loss Function Unit Tests', () => {
     });
 
     test('Maximize HP', () => {
-        const maxHP = new lossFuncs.MaximizeHP();
+        const maxHP = new lossFuncs.MaxHPLoss();
 
         expect(maxHP.loss(spread1)).toBe(-20);
         expect(maxHP.loss(spread2)).toBe(-52);
@@ -23,7 +23,7 @@ describe('Loss Function Unit Tests', () => {
     });
 
     test('MinimizeEVs while Minimizing HP', () => {
-        const minEVs = new lossFuncs.MinimizeEVs(new lossFuncs.MinimizeHP());
+        const minEVs = new lossFuncs.MinEVsLoss(new lossFuncs.MinHPLoss());
 
         expect(minEVs.loss(spread1)).toBe(224020);
         expect(minEVs.loss(spread2)).toBe(472052);
@@ -31,7 +31,7 @@ describe('Loss Function Unit Tests', () => {
     });
 
     test('MinimizeEVs while Maximizing HP', () => {
-        const minEVs = new lossFuncs.MinimizeEVs(new lossFuncs.MaximizeHP());
+        const minEVs = new lossFuncs.MinEVsLoss(new lossFuncs.MaxHPLoss());
 
         expect(minEVs.loss(spread1)).toBe(223980);
         expect(minEVs.loss(spread2)).toBe(471948);
