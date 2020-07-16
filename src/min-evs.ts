@@ -4,7 +4,7 @@ import { MoveCategory } from '@smogon/calc/dist/data/interface';
 import { MinEVsLoss, MinHPLoss, MaxHPLoss } from 'utilities/loss-func';
 import { validateInput, SpreadGenerator, SpreadComparator, meetsReqs, applySpread } from 'utilities';
 
-export function getMinEVs(requirements: Requirements): Spread {
+export function findMinEVs(requirements: Requirements): Spread {
     validateInput(requirements);
 
     // Extract defending Pokemon from first requirement's first attack for SpreadGenerator

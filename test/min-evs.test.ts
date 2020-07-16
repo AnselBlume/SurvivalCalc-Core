@@ -1,7 +1,7 @@
 import { Generations, Pokemon, Move, Field } from '@smogon/calc';
 import { Requirements, HPRequirement, SurvivalRequirement } from 'model/requirements';
 import { Stat, Attack, Spread } from 'model';
-import { getMinEVs } from 'min-evs';
+import { findMinEVs } from 'min-evs';
 
 describe('minEVs Unit Tests', () => {
     test('LO Latios Draco Meteor vs. Haban Garchomp', () => {
@@ -21,7 +21,7 @@ describe('minEVs Unit Tests', () => {
 
         const reqs = new Requirements(new HPRequirement(), 
                                       new SurvivalRequirement(.01, 100, new Attack(latios, garchomp, dracoMeteor)));
-        const spread = getMinEVs(reqs);
+        const spread = findMinEVs(reqs);
 
         expect(spread[Stat.HP]).toBe(4);
         expect(spread[Stat.DEF]).toBe(0);
@@ -66,7 +66,7 @@ describe('minEVs Unit Tests', () => {
         ];
 
         const reqs = new Requirements(new HPRequirement, new SurvivalRequirement(5.3, 75, ...attacks));
-        const minEVs = getMinEVs(reqs);
+        const minEVs = findMinEVs(reqs);
 
         expect(minEVs[Stat.HP]).toBe(52); // Calculated using previous SurvivalCalc at pokeasc.appspot.com
         expect(minEVs[Stat.DEF]).toBe(0);
@@ -98,7 +98,7 @@ describe('minEVs Unit Tests', () => {
         const reqs = new Requirements(new HPRequirement(),
                                       new SurvivalRequirement(.01, 100, ...attacks));
 
-        const spread = getMinEVs(reqs);
+        const spread = findMinEVs(reqs);
 
         expect(spread[Stat.HP]).toBe(28);
         expect(spread[Stat.DEF]).toBe(4);
@@ -121,7 +121,7 @@ describe('minEVs Unit Tests', () => {
         const reqs = new Requirements(new HPRequirement({ reduceWeather: true }),
                                       new SurvivalRequirement(.01, 100, new Attack(tyranitar, cresselia, fling)));
 
-        const spread = getMinEVs(reqs);
+        const spread = findMinEVs(reqs);
 
         expect(spread[Stat.HP]).toBe(92);
         expect(spread[Stat.DEF]).toBe(252);
@@ -157,7 +157,7 @@ describe('minEVs Unit Tests', () => {
         const survivalReq2 = new SurvivalRequirement(50.1, 100, new Attack(hydreigon, cresselia, darkPulse));
 
         const reqs = new Requirements(new HPRequirement(), survivalReq1, survivalReq2);
-        const minEVs = getMinEVs(reqs);
+        const minEVs = findMinEVs(reqs);
 
         expect(minEVs[Stat.HP]).toBe(220);
         expect(minEVs[Stat.DEF]).toBe(156);
@@ -184,7 +184,7 @@ describe('minEVs Unit Tests', () => {
         const reqs = new Requirements(new HPRequirement(), 
                                       new SurvivalRequirement(50.1, 100, new Attack(hydreigon, cresselia, darkPulse)));
 
-        expect(() => getMinEVs(reqs)).toThrow(Error);
+        expect(() => findMinEVs(reqs)).toThrow(Error);
 
     });
 });
