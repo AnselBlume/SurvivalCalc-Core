@@ -35,10 +35,11 @@ export class SpreadGenerator {
     }
 
     /**
-     * Generates a subset of getAllSpreads(maxEVs) which is "maximal" in the sense that
+     * For maxEVs in {0, ..., 508}, generates spreads whose EV total equals maxEVs.
+     * This is a subset of getAllSpreads(maxEVs) which is "maximal" in the sense that
      * for each spread s in getAllSpreads(maxEVs), there exists a spread s' in getMaximalSpreads(maxEVs)
      * such that s.hpEVs <= s'.hpEVs, s.defEVs <= s'.defEVs, and s.sDefEVs <= s'.sDefEVs. Thus,
-     * running a search to find the best spread using up to a certain amount of EVs runs faster
+     * running a search to find the best spread using up to a certain amount of EVs runs much faster
      * when calling this method.
      *
      * May have extra EVs that do not change the stat, so the user should call removeExtraEVs 
@@ -51,22 +52,25 @@ export class SpreadGenerator {
         maxEVs = Math.min(Math.max(0, maxEVs), 508); // Restrict to {0, ... , 508}
         let spread = new Spread();
 
-        for (let hpEVs = 0; hpEVs <= 252;) {
+        // Ensures evTotal always equals maxEVs when maxEVs is a multiple of 4
+        for (let hpEVs = maxEVs === 508 ? 4 : 0; hpEVs <= 252;) {
             if (hpEVs > maxEVs) {
                 break;
             }
 
-            for (let defEVs = 0; defEVs <= 252;) {
-                const sDefEVs = Math.min(maxEVs - hpEVs - defEVs, 252);
+            let defEVs = Math.min(252, maxEVs - hpEVs);
+            let sDefEVs = Math.max(0, maxEVs - hpEVs - defEVs);
 
-                // sDefEVs must be valid. Also ensures that defEVs <= totalEVs
-                if (sDefEVs >= 0) {
-                    spread = new Spread(hpEVs, defEVs, sDefEVs);
-                    yield spread;
-                }
+            while (defEVs >= 0 && sDefEVs <= 252) {
+                spread = new Spread(hpEVs, defEVs, sDefEVs);
+                yield spread;
 
-                defEVs += this.getNextIncrement(spread, Stat.DEF);
+                // Transfer EVs from def to sDef
+                const sDefIncr = this.getNextIncrement(spread, Stat.SDEF);
+                sDefEVs += sDefIncr;
+                defEVs -= sDefIncr;
             }
+
             hpEVs += this.getNextIncrement(spread, Stat.HP);
         }
     }

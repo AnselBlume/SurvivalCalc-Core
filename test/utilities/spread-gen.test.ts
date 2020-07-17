@@ -285,9 +285,9 @@ describe('getMaximalSpreads Unit Tests', () => {
         const spreads = spreadGen.getMaximalSpreads(555);
 
         let count = 0;
-        const hpVals = new Map([[0, false]]);
-        const defVals = new Map([[0, false]]);
-        const sDefVals = new Map(); // Will never generate 252/252/0, but will generate 252/252/4
+        const hpVals = new Map();
+        const defVals = new Map();
+        const sDefVals = new Map(); // Will never generate 252/252/0
 
         for (let i = 4; i <= 252; i += 4) {
             hpVals.set(i, false);
@@ -302,7 +302,7 @@ describe('getMaximalSpreads Unit Tests', () => {
             count++;
         }
 
-        expect(count).toBe(4096);
+        expect(count).toBe(2016);
 
         expect(reduceAnd(hpVals.values())).toBe(true);
         expect(reduceAnd(defVals.values())).toBe(true);
@@ -333,13 +333,12 @@ describe('getMaximalSpreads Unit Tests', () => {
 
         let count = 0;
         const hpVals = new Map([[0, false]]);
-        const defVals = new Map([[0, false]]);
-        const sDefVals = new Map([[3, false], [7, false], [11, false],
-                                  [15, false], [19, false], [23, false], [27, false]]);
+        const defVals = new Map([[27, false], [23, false], [15, false], [7, false]]);
+        const sDefVals = new Map([[0, false]]);
 
         for (let i = 4; i <= 20; i += 8) {
             hpVals.set(i, false);
-            defVals.set(i, false);
+            sDefVals.set(i, false);
         }
 
         for (const spread of spreads) {
@@ -368,11 +367,11 @@ describe('getMaximalSpreads Unit Tests', () => {
 
         for (let i = 4; i <= 255; i += 8) {
             hpVals.set(i, false);
-            defVals.set(i, false);
+            defVals.set(i - 4, false); // defVals: 252, 248, 240, ...
             sDefVals.set(i, false);
         }
 
-        sDefVals.delete(4); // 4 sDef will not be reached
+        defVals.set(252, false);
 
         for (const spread of spreads) {
             hpVals.set(spread[Stat.HP], true);
@@ -381,7 +380,7 @@ describe('getMaximalSpreads Unit Tests', () => {
             count += 1;
         }
 
-        expect(count).toBe(624);
+        expect(count).toBe(620);
 
         expect(reduceAnd(hpVals.values())).toBe(true);
         expect(reduceAnd(defVals.values())).toBe(true);
