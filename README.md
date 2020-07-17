@@ -13,16 +13,16 @@ For information on how to use these calculators, see the notes below the calcula
 The SurvivalCalc-Core exposes two primary functions: **findMinEVs** and **findBestEVs**. Both rely on the following APIs:
 
 - **SurvivalCalc-Core**
-  - Requirements: specifies SurvivalRequirements and an HPRequirement the EV spread should meet
-    - SurvivalRequirement: specifies what Attacks a defending Pokemon is to survive with a percentage of HP remaining a percentage of the time
-    - HPRequirement: specifies passive damage reducing HP numbers the defending Pokemon should have (e.g. reduce weather damage, burn damage)
-  - Attack: specifies an attacking Pokémon, defending Pokémon, the Move used, and any Field conditions
+  - [Requirements](https://github.com/AnselBlume/SurvivalCalc-Core/blob/489e134f664bcd55172771471834762527543b6c/src/model/requirements.ts#L47): specifies SurvivalRequirements and an HPRequirement the EV spread should meet
+    - [SurvivalRequirement](https://github.com/AnselBlume/SurvivalCalc-Core/blob/489e134f664bcd55172771471834762527543b6c/src/model/requirements.ts#L28): specifies what Attacks a defending Pokemon is to survive with a percentage of HP remaining a percentage of the time
+    - [HPRequirement](https://github.com/AnselBlume/SurvivalCalc-Core/blob/489e134f664bcd55172771471834762527543b6c/src/model/requirements.ts#L3): specifies passive damage reducing HP numbers the defending Pokemon should have (e.g. reduce weather damage, burn damage)
+  - [Attack](https://github.com/AnselBlume/SurvivalCalc-Core/blob/489e134f664bcd55172771471834762527543b6c/src/model/attack.ts#L3): specifies an attacking Pokémon, defending Pokémon, the Move used, and any Field conditions
 - **[@smogon/calc](https://github.com/smogon/damage-calc): Smogon's Damage Calculator API**
-  - Pokemon: representation of a Pokémon
-  - Move: representation of a Pokémon's move
-  - Field: representation of the field on which an attack occurs
+  - [Pokemon](https://github.com/smogon/damage-calc/blob/e3561c72a926c0972133b48427a8ae67573aad5e/calc/src/pokemon.ts): representation of a Pokémon
+  - [Move](https://github.com/smogon/damage-calc/blob/e3561c72a926c0972133b48427a8ae67573aad5e/calc/src/move.ts): representation of a Pokémon's move
+  - [Field](https://github.com/smogon/damage-calc/blob/master/calc/src/field.ts): representation of the field on which an attack occurs
 
-The @smogon/calc components listed above are re-exported in [src/index.ts](https://github.com/AnselBlume/SurvivalCalc-Core/blob/master/src/index.ts) for the user's convenience.
+The SurvivalCalc-Core and @smogon/calc components listed above are re-exported in [src/index.ts](https://github.com/AnselBlume/SurvivalCalc-Core/blob/master/src/index.ts) for the user's convenience.
 
 A sample webpack.config.js is also included. Simply change the _entry_ attribute to the desired entrypoint.
 
@@ -100,7 +100,7 @@ import {
     SurvivalRequirement, HPRequirement, Requirements,
     Attack, Spread, Stat,
     findMinEVs
-} from 'index;
+} from 'scalc-core';
 
 // Construct the Attack object
 const latios = new Pokemon(8, 'Latios', {
