@@ -1,6 +1,6 @@
 import { Generations, Pokemon, Move, Field } from '@smogon/calc';
 import { Requirements, HPRequirement, SurvivalRequirement } from 'model/requirements';
-import { Stat, Attack, Spread } from 'model';
+import { Stat, Attack } from 'model';
 import { findMinEVs } from 'min-evs';
 
 describe('minEVs Unit Tests', () => {
