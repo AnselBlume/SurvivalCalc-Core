@@ -81,7 +81,7 @@ const reqs = new Requirements(hpReq, survivalReq);
 ### findMinEVs
 The **findMinEVs** function finds the best EV spread which meets the specified requirements while using the minimum number of total EVs. The function signature is
 ```
-    findMinEVs(reqs: Requirements): Spread
+findMinEVs(reqs: Requirements): Spread
 ```
 
 To continue our example with Conkeldurr, we would simply call
