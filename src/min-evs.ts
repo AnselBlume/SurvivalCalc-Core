@@ -43,8 +43,7 @@ export function findMinEVs(requirements: Requirements): Spread {
                          && (minimizingHP && spread[Stat.HP] > comparator.bestSpread[Stat.HP]
                              || !minimizingHP && spread[Stat.HP] < comparator.bestSpread[Stat.HP]);
 
-        if (evTotal > bestEVTotal || evTotal === bestEVTotal && hasBadHP)
-        {
+        if (evTotal > bestEVTotal || evTotal === bestEVTotal && hasBadHP) {
             continue;
         }
         
