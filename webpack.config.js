@@ -20,6 +20,8 @@ module.exports = {
   },
   output: {
     filename: 'bundle.js',
+    library: 'scc',
+    libraryTarget: 'var',
     path: path.resolve(__dirname, 'dist'),
   },
 };

@@ -1,6 +1,6 @@
 {
   "name": "survival-calc-core",
-  "version": "1.0.0",
+  "version": "0.0.1",
   "description": "Pokemon Attack Survival Calculator Core",
   "main": "index.js",
   "scripts": {
