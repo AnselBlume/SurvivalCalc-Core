@@ -1,14 +1,27 @@
 {
-  "name": "survival-calc-core",
-  "version": "0.0.1",
+  "name": "survivalcalc",
+  "version": "1.0.0",
   "description": "Pokemon Attack Survival Calculator Core",
-  "main": "index.js",
-  "scripts": {
-    "test": "jest",
-    "lint": "eslint . --ext .ts"
-  },
-  "author": "Ansel Blume",
+  "author": "Ansel Blume <anselblume@gmail.com>",
   "license": "MIT",
+  "homepage": "https://github.com/AnselBlume/SurvivalCalc-Core",
+  "bugs": {
+    "url": "https://github.com/AnselBlume/SurvivalCalc-Core/issues"
+  },
+  "main": "dist/index.js",
+  "types": "dist/index.d.ts",
+  "files": [
+    "tsconfig.json",
+    "webpack.config.json",
+    "src",
+    "dist"
+  ],
+  "scripts": {
+    "build": "tsc -d",
+    "lint": "eslint . --ext .ts",
+    "prepublishOnly": "npm run lint && npm run build",
+    "test": "jest"
+  },
   "devDependencies": {
     "@types/jest": "^26.0.3",
     "@typescript-eslint/eslint-plugin": "^3.4.0",
@@ -24,6 +37,6 @@
     "webpack-cli": "^3.3.12"
   },
   "dependencies": {
-    "@smogon/calc": "^0.4.1"
+    "@smogon/calc": "^0.4.2"
   }
 }
