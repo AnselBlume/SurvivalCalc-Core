@@ -1,21 +1,24 @@
 import { Spread, Stat, Attack } from '../model';
+import { Pokemon, calcStat } from '@smogon/calc';
 
 /**
  * Applies the specified EV spread to the defending Pokemon in each of the Attack objects.
  * 
  * @param spread The spread to be applied.
- * @param attacks The Attack array whose defenders will be cloned with the hp, def, and sDef EVs
- * replaced.
+ * @param attacks The Attack array whose defenders will have their EV spreads and stats changed.
  */
 export function applySpread(spread: Spread, attacks: Attack[]): void {
     for (let i = 0; i < attacks.length; i++) {
-        const defender = attacks[i].defender;
+        const defender: Pokemon = attacks[i].defender;
 
-        defender.evs[Stat.HP] = spread[Stat.HP];
-        defender.evs[Stat.DEF] = spread[Stat.DEF];
-        defender.evs[Stat.SDEF] = spread[Stat.SDEF];
+        for (const stat of [Stat.HP, Stat.DEF, Stat.SDEF]) {
+            defender.evs[stat] = spread[stat]; // Update EVs
 
-        // The Pokemon's constructor needs to be called in order to recompute stats from EVs
-        attacks[i].defender = defender.clone();
+            // Update stat
+            const newStat = calcStat(defender.gen, stat, defender.species.baseStats[stat],
+                                     defender.ivs[stat], defender.evs[stat], defender.level, defender.nature);
+            defender.stats[stat] = newStat;
+            defender.rawStats[stat] = newStat;
+        }
     }
 }
