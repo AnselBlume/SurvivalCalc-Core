@@ -1,4 +1,4 @@
-import { Requirements } from 'model';
+import { Requirements } from '../model';
 import { SpeciesName, Specie } from '@smogon/calc/dist/data/interface';
 
 /**

@@ -1,4 +1,4 @@
-import { Attack } from 'model/attack';
+import { Attack } from './attack';
 
 /**
  * Specifications for properties the defender's HP stat should satisfy.

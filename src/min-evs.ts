@@ -1,8 +1,8 @@
-import { Requirements, Spread, SurvivalRequirement, Stat } from 'model';
+import { Requirements, Spread, SurvivalRequirement, Stat } from './model';
 import { Pokemon } from '@smogon/calc';
 import { MoveCategory } from '@smogon/calc/dist/data/interface';
-import { MinEVsLoss, MinHPLoss, MaxHPLoss } from 'utilities/loss-func';
-import { validateInput, SpreadGenerator, SpreadComparator, meetsReqs, applySpread } from 'utilities';
+import { MinEVsLoss, MinHPLoss, MaxHPLoss } from './utilities/loss-func';
+import { validateInput, SpreadGenerator, SpreadComparator, meetsReqs, applySpread } from './utilities';
 
 /**
  * Finds the EV spread which meets the requirements which uses the fewest total EVs.

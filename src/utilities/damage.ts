@@ -1,4 +1,4 @@
-import { Attack } from 'model/attack';
+import { Attack } from '../model/attack';
 import { calculate } from '@smogon/calc';
 import { Generation } from '@smogon/calc/dist/data/interface';
 

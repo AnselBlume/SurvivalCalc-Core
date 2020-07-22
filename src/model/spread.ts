@@ -1,4 +1,4 @@
-import { Stat } from 'model/stat';
+import { Stat } from './stat';
 
 export class Spread {
     [Stat.HP]: number;

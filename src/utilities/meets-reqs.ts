@@ -1,7 +1,7 @@
 import { Pokemon } from '@smogon/calc';
-import { getDamageRolls } from 'utilities/damage';
-import { getKOChance } from 'utilities/ko-chance';
-import { SurvivalRequirement, HPRequirement, Requirements } from 'model/requirements';
+import { getDamageRolls } from './damage';
+import { getKOChance } from './ko-chance';
+import { SurvivalRequirement, HPRequirement, Requirements } from '../model/requirements';
 
 /**
  * Determines whether the defending Pokemon specified by the first attack in the first

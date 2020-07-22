@@ -1,4 +1,4 @@
-import { Spread, Stat, Attack } from 'model';
+import { Spread, Stat, Attack } from '../model';
 
 /**
  * Applies the specified EV spread to the defending Pokemon in each of the Attack objects.

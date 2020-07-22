@@ -1,5 +1,5 @@
-import { Requirements, Spread, Attack } from 'model';
-import { BulkLoss, SpreadComparator, validateInput, SpreadGenerator, meetsReqs, applySpread } from 'utilities';
+import { Requirements, Spread, Attack } from './model';
+import { BulkLoss, SpreadComparator, validateInput, SpreadGenerator, meetsReqs, applySpread } from './utilities';
 import { Pokemon } from '@smogon/calc';
 
 /**
